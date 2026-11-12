@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { validateInquiry, type InquiryErrors, type InquiryInput } from "@/lib/inquiry"
 import { buildContactMailto, site } from "@/lib/site"
+import { cn } from "@/lib/utils"
 import { useState, type FormEvent } from "react"
 
 const initial: InquiryInput = {
@@ -11,6 +12,9 @@ const initial: InquiryInput = {
   description: "",
   companyWebsite: "",
 }
+
+const fieldClass =
+  "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-cyan-400/50 dark:focus:ring-cyan-400/20"
 
 export function InquiryForm() {
   const [values, setValues] = useState<InquiryInput>(initial)
@@ -39,9 +43,12 @@ export function InquiryForm() {
 
   if (openedMail) {
     return (
-      <div className="rounded-2xl border border-foreground/10 bg-slate-50 p-8 dark:bg-slate-900" role="status">
+      <div
+        className="rounded-2xl border border-slate-200/80 bg-slate-50/90 p-8 dark:border-slate-700/80 dark:bg-slate-900/80"
+        role="status"
+      >
         <p className="text-sm font-medium text-cyan-700 dark:text-cyan-400">Mail app opened</p>
-        <h2 className="mt-2 text-3xl font-bold">Finish in your inbox</h2>
+        <h2 className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-50">Finish in your inbox</h2>
         <p className="mt-4 text-foreground/70">
           {values.name ? `${values.name}, y` : "Y"}our mail app should be open with a message ready for{" "}
           <span className="font-medium text-foreground">{site.email}</span>. Send it from there to complete
@@ -94,7 +101,10 @@ export function InquiryForm() {
         placeholder="Tell us about your interests and what you would like to learn or discuss."
         onChange={(value) => update("description", value)}
       />
-      <Button type="submit" className="rounded-full px-8 py-6 text-base">
+      <Button
+        type="submit"
+        className="w-full rounded-full bg-slate-900 px-8 py-6 text-base text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 sm:w-auto"
+      >
         Send message
       </Button>
       <p className="text-sm text-foreground/60">
@@ -123,7 +133,7 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium">
+      <label htmlFor={id} className="text-sm font-medium text-slate-800 dark:text-slate-200">
         {label}
         {hint ? <span className="ml-2 font-normal text-foreground/50">{hint}</span> : null}
       </label>
@@ -134,7 +144,7 @@ function Field({
         value={value}
         aria-invalid={Boolean(error)}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-xl border border-foreground/15 bg-background px-3 py-3"
+        className={cn(fieldClass, error && "border-red-400 focus:border-red-400 focus:ring-red-400/20")}
       />
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
     </div>
@@ -160,7 +170,7 @@ function Area({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium">
+      <label htmlFor={id} className="text-sm font-medium text-slate-800 dark:text-slate-200">
         {label}
         {hint ? <span className="ml-2 font-normal text-foreground/50">{hint}</span> : null}
       </label>
@@ -172,7 +182,7 @@ function Area({
         placeholder={placeholder}
         aria-invalid={Boolean(error)}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-xl border border-foreground/15 bg-background px-3 py-3"
+        className={cn(fieldClass, "resize-y", error && "border-red-400 focus:border-red-400 focus:ring-red-400/20")}
       />
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
     </div>

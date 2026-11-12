@@ -1,6 +1,6 @@
 export const site = {
-  name: "CoMind",
-  tagline: "Connecting Global Talent. Building the Future of AI.",
+  name: "DevBridge",
+  tagline: "Connect with AI Experts. Grow Through Mentorship.",
   description:
     "AI education, technical mentorship, software development, intelligent automation, and technology collaboration across the United States and Taiwan.",
   email: "2.r.3.141592@gmail.com",

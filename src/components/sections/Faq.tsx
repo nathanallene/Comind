@@ -1,272 +1,302 @@
 "use client"
 
 import { FAQItem } from "@/components/sections/faq/FaqItem"
+import { SectionTitle } from "@/components/sections/SectionTitle"
+import { contactMailto } from "@/lib/site"
+import { cn } from "@/lib/utils"
 import type { FAQItemProps } from "@/types"
 import type { AnimatedProps } from "@/types/motion"
 import { AnimatePresence, motion } from "framer-motion"
-import { Sparkles } from "lucide-react"
-import { useState } from "react"
+import {
+  Briefcase,
+  Building2,
+  CircleHelp,
+  GraduationCap,
+  Mail,
+  MessageCircle,
+  Users,
+} from "lucide-react"
+import type { LucideIcon } from "lucide-react"
+import { useMemo, useState } from "react"
 
 const categories = [
-  "About Our Company",
-  "Joining Our Network",
-  "AI Learning & Development",
-  "Opportunities & Collaboration",
-  "Payments & Compensation",
-  "Privacy & Security",
-  "Policies & Professional Standards",
-  "Contact & Support",
+  { id: "about", label: "About DevBridge", icon: Building2 },
+  { id: "joining", label: "Joining the Network", icon: Users },
+  { id: "learning", label: "Learning & Mentorship", icon: GraduationCap },
+  { id: "services", label: "Services & Collaboration", icon: Briefcase },
+  { id: "contact", label: "Contact & Support", icon: Mail },
 ] as const
+
+type CategoryLabel = (typeof categories)[number]["label"]
 
 const faqs: FAQItemProps[] = [
   {
-    category: "About Our Company",
-    question: "What does your company do?",
+    category: "About DevBridge",
+    question: "What does DevBridge do?",
     answer:
-      "We are a Taiwan-based technology company focused on AI education, technical mentorship, software development and technology collaboration.",
+      "DevBridge connects individuals with AI experts and software engineers. Through technical mentorship, hands-on learning, and collaboration, we help people build practical skills and explore opportunities in AI and technology.",
   },
   {
-    category: "About Our Company",
-    question: "Where is your company located?",
+    category: "About DevBridge",
+    question: "What is your mission?",
     answer:
-      "Our company is based in Taiwan, with a vision to build professional connections with individuals and technology professionals in the United States.",
+      "Our mission is to bring people, knowledge, and technology together—so participants can deepen their understanding of AI, grow professionally, and form meaningful connections with experienced practitioners.",
   },
   {
-    category: "About Our Company",
-    question: "What is your company's mission?",
+    category: "About DevBridge",
+    question: "What makes DevBridge different?",
     answer:
-      "Our mission is to connect people with technology experts, help them develop AI skills and create opportunities for international collaboration.",
+      "We focus on people first: mentorship and practical learning alongside real technology work. Participants can learn from experienced engineers, build skills over time, and explore collaboration when the fit is right.",
   },
   {
-    category: "About Our Company",
-    question: "What makes your company different?",
+    category: "Joining the Network",
+    question: "Who can join?",
     answer:
-      "We bring together experienced Taiwan-based technology professionals and motivated individuals in the United States to share knowledge, develop skills and explore future opportunities.",
+      "Anyone interested in artificial intelligence, software development, or professional growth is welcome to reach out—whether you are just getting started or already working in tech.",
   },
   {
-    category: "Joining Our Network",
-    question: "Who can join your network?",
-    answer: "Anyone interested in artificial intelligence, technology and professional development is welcome to express interest.",
-  },
-  {
-    category: "Joining Our Network",
-    question: "Do I need previous AI experience?",
-    answer: "No. Beginners are welcome. You only need an interest in learning and developing new skills.",
-  },
-  {
-    category: "Joining Our Network",
-    question: "How can I join your network?",
+    category: "Joining the Network",
+    question: "Do I need prior AI experience?",
     answer:
-      "Simply complete the contact form on our website. It opens your mail app with a ready message so you can send your inquiry directly.",
+      "No. Beginners are welcome. Curiosity and a willingness to learn matter more than a specific background.",
   },
   {
-    category: "Joining Our Network",
+    category: "Joining the Network",
+    question: "How do I get started?",
+    answer:
+      "Use the contact form on this site or email us with a short note about your interests. We will follow up to discuss next steps.",
+  },
+  {
+    category: "Joining the Network",
     question: "Can I participate remotely?",
-    answer: "Yes. Many educational activities and professional discussions can be conducted online.",
+    answer: "Yes. Mentorship, learning activities, and many conversations can take place online.",
   },
   {
-    category: "AI Learning & Development",
-    question: "What AI skills can I learn?",
+    category: "Learning & Mentorship",
+    question: "What can I learn?",
     answer:
-      "You can explore artificial intelligence, generative AI, machine learning, AI tools, programming and software development.",
+      "Topics can include AI fundamentals, generative AI, machine learning, practical AI tools, programming, and software development—matched to your level and goals.",
   },
   {
-    category: "AI Learning & Development",
-    question: "Do you provide technical training?",
+    category: "Learning & Mentorship",
+    question: "How does mentorship work?",
     answer:
-      "We provide educational resources, practical learning exercises and technical guidance to support your development.",
+      "We connect participants with experienced AI engineers and software developers for guidance, feedback, and hands-on learning support.",
   },
   {
-    category: "AI Learning & Development",
-    question: "Will I receive guidance from experienced professionals?",
-    answer:
-      "Yes. Our goal is to connect participants with experienced AI engineers and software developers for knowledge sharing and mentorship.",
-  },
-  {
-    category: "AI Learning & Development",
+    category: "Learning & Mentorship",
     question: "Do I need programming experience?",
     answer:
-      "Not necessarily. Some learning activities are suitable for beginners, while advanced technical activities may require programming knowledge.",
+      "Not always. Some paths are suitable for beginners. More advanced technical work may benefit from programming experience, which we can help you build over time.",
   },
   {
-    category: "Opportunities & Collaboration",
-    question: "What opportunities can your network provide?",
+    category: "Services & Collaboration",
+    question: "What services do you offer?",
     answer:
-      "Our network focuses on learning, professional connections and potential future collaboration in AI and technology.",
+      "We offer AI education and training, technical mentorship, opportunity guidance, AI and software development, intelligent automation, and technology consulting and collaboration.",
   },
   {
-    category: "Opportunities & Collaboration",
-    question: "Can I participate in real AI projects?",
+    category: "Services & Collaboration",
+    question: "Can I work on real projects?",
     answer:
-      "Qualified individuals may be considered for future projects based on their skills, experience and project requirements.",
+      "When skills, interests, and project needs align, participants may be considered for collaboration. Any project work is scoped and agreed separately—nothing is guaranteed upfront.",
   },
   {
-    category: "Opportunities & Collaboration",
-    question: "Can I collaborate with your Taiwan-based team?",
+    category: "Services & Collaboration",
+    question: "Do you work with organizations as well as individuals?",
     answer:
-      "Yes. International knowledge sharing and potential collaboration between US professionals and Taiwan-based engineers are important parts of our vision.",
-  },
-  {
-    category: "Opportunities & Collaboration",
-    question: "Do you work with third-party AI platforms?",
-    answer:
-      "Participants may independently explore third-party AI training and evaluation platforms. All activities must follow the respective platforms' rules and requirements.",
-  },
-  {
-    category: "Payments & Compensation",
-    question: "Is there a fee to join your network?",
-    answer:
-      "Any applicable fees for educational or professional services will be explained clearly before participation.",
-  },
-  {
-    category: "Payments & Compensation",
-    question: "Do you offer paid projects?",
-    answer:
-      "Paid projects may become available when suitable opportunities arise. These are subject to separate agreements.",
-  },
-  {
-    category: "Payments & Compensation",
-    question: "Do you guarantee income or employment?",
-    answer: "No. We do not guarantee earnings, employment, platform acceptance or project assignments.",
-  },
-  {
-    category: "Payments & Compensation",
-    question: "How is project compensation determined?",
-    answer:
-      "Compensation for any commercial project will be discussed and documented separately before the collaboration begins.",
-  },
-  {
-    category: "Privacy & Security",
-    question: "How do you protect my personal information?",
-    answer: "We are committed to handling personal information responsibly and following applicable privacy requirements.",
-  },
-  {
-    category: "Privacy & Security",
-    question: "What information do I need to provide?",
-    answer:
-      "The contact form asks for your name, email address, and a short message about your interests.",
-  },
-  {
-    category: "Privacy & Security",
-    question: "Do you share my information with third parties?",
-    answer:
-      "We do not sell personal information. Any sharing will be handled according to our privacy policy and applicable legal requirements.",
-  },
-  {
-    category: "Privacy & Security",
-    question: "Can I request the deletion of my information?",
-    answer:
-      "Yes. You may contact our team to request access to or deletion of your personal information, subject to applicable legal requirements.",
-  },
-  {
-    category: "Policies & Professional Standards",
-    question: "Are you officially connected to third-party AI platforms?",
-    answer:
-      "No. Our educational and professional development services operate independently. We do not claim to represent or operate external AI platforms.",
-  },
-  {
-    category: "Policies & Professional Standards",
-    question: "Who manages third-party platform accounts?",
-    answer:
-      "Participants are responsible for their own accounts, personal information and activities on external platforms.",
-  },
-  {
-    category: "Policies & Professional Standards",
-    question: "Do participants need to follow platform rules?",
-    answer:
-      "Yes. All participants must follow the applicable terms, eligibility requirements and policies of each platform.",
-  },
-  {
-    category: "Policies & Professional Standards",
-    question: "Are future projects guaranteed?",
-    answer:
-      "No. Future collaboration depends on project availability, individual qualifications and separately agreed terms.",
+      "Yes. Individuals join for learning and mentorship; organizations can discuss development, automation, consulting, and collaboration needs with our team.",
   },
   {
     category: "Contact & Support",
-    question: "How can I contact your team?",
-    answer: "You can reach us through the contact form on our website, which opens your mail app, or by writing to our listed email address.",
-  },
-  {
-    category: "Contact & Support",
-    question: "Can I speak with someone before joining?",
+    question: "How can I contact you?",
     answer:
-      "Absolutely. We welcome questions and introductory conversations before you decide whether to participate.",
+      "Use the contact form on this website or write to our listed email address. The form prepares a message in your mail app so you can send it directly.",
   },
   {
     category: "Contact & Support",
-    question: "How long does it take to receive a response?",
-    answer: "Our team aims to respond to inquiries as soon as reasonably possible during business days.",
+    question: "Can I ask questions before joining?",
+    answer:
+      "Absolutely. We welcome introductory conversations so you can learn more before deciding whether to participate.",
+  },
+  {
+    category: "Contact & Support",
+    question: "How quickly will I hear back?",
+    answer: "We aim to respond to inquiries as soon as reasonably possible on business days.",
   },
   {
     category: "Contact & Support",
     question: "Can I schedule an introductory meeting?",
     answer:
-      "Yes. You can contact us to discuss arranging an online introductory meeting, subject to availability.",
+      "Yes. Mention that in your message and we can arrange an online introduction when schedules allow.",
   },
 ]
 
 export function FAQ({ id }: AnimatedProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>(categories[0])
+  const [selectedCategory, setSelectedCategory] = useState<CategoryLabel>(categories[0].label)
+  const [openQuestion, setOpenQuestion] = useState<string | null>(faqs[0]?.question ?? null)
 
-  const filteredFaqs = faqs.filter((faq) => faq.category === selectedCategory)
+  const filteredFaqs = useMemo(
+    () => faqs.filter((faq) => faq.category === selectedCategory),
+    [selectedCategory],
+  )
+
+  const activeCategory = categories.find((category) => category.label === selectedCategory) ?? categories[0]
+  const ActiveIcon = activeCategory.icon as LucideIcon
+
+  function selectCategory(label: CategoryLabel) {
+    setSelectedCategory(label)
+    const first = faqs.find((faq) => faq.category === label)
+    setOpenQuestion(first?.question ?? null)
+  }
 
   return (
-    <section id={id} className="relative z-10 overflow-hidden py-20">
+    <section id={id} className="relative z-10 scroll-mt-28 overflow-hidden py-20">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <motion.div
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 dark:bg-cyan-800/30 mx-auto mb-4"
-            initial={false}
-            whileInView={{ rotate: 0, opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <Sparkles className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
-          </motion.div>
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-            Frequently Asked{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-pink-600 dark:from-cyan-600 dark:to-cyan-700">
-              Questions
-            </span>
-          </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-400">
-            Answers about our company, joining the network, AI learning, collaboration, and support.
-          </p>
-        </div>
+        <SectionTitle icon={CircleHelp} title="Frequently Asked" accent="Questions">
+          <p>Answers about mentorship, learning, collaboration, and how to get in touch.</p>
+        </SectionTitle>
 
-        <div
-          role="tablist"
-          aria-label="Question categories"
-          className="mx-auto mb-12 grid max-w-5xl grid-cols-1 gap-2 rounded-3xl border border-slate-200/80 bg-slate-100/80 p-2 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/50 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {categories.map((category) => {
-            const selected = selectedCategory === category
-            return (
-              <button
-                key={category}
-                type="button"
-                role="tab"
-                aria-selected={selected}
-                onClick={() => setSelectedCategory(category)}
-                className={`rounded-2xl px-4 py-3 text-center text-sm font-medium leading-snug transition-all duration-200 ${
-                  selected
-                    ? "bg-white text-cyan-700 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-200 dark:bg-slate-800 dark:text-cyan-300 dark:shadow-cyan-500/10 dark:ring-cyan-700/50"
-                    : "text-slate-600 hover:bg-white/80 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/70 dark:hover:text-white"
-                }`}
-              >
-                {category}
-              </button>
-            )
-          })}
-        </div>
+        <div className="relative mx-auto max-w-5xl">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-6 -inset-y-4 rounded-[2rem] bg-gradient-to-br from-cyan-500/10 via-transparent to-emerald-500/10 blur-2xl dark:from-cyan-400/10 dark:to-emerald-400/10"
+          />
 
-        <motion.div layout className="mx-auto max-w-3xl space-y-4">
-          <AnimatePresence mode="popLayout">
-            {filteredFaqs.map((faq) => (
-              <FAQItem key={faq.question} {...faq} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+          <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] lg:gap-10">
+            <nav aria-label="FAQ categories" className="flex flex-col gap-1">
+              <div className="mb-2 flex gap-2 overflow-x-auto pb-1 lg:hidden">
+                {categories.map((category) => {
+                  const selected = selectedCategory === category.label
+                  const Icon = category.icon
+                  return (
+                    <button
+                      key={`chip-${category.id}`}
+                      type="button"
+                      onClick={() => selectCategory(category.label)}
+                      className={cn(
+                        "inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                        selected
+                          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700",
+                      )}
+                    >
+                      <Icon className="h-4 w-4" aria-hidden />
+                      {category.label}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <ul className="hidden space-y-1 lg:block">
+                {categories.map((category, index) => {
+                  const selected = selectedCategory === category.label
+                  const Icon = category.icon
+                  const count = faqs.filter((faq) => faq.category === category.label).length
+                  return (
+                    <li key={category.id}>
+                      <button
+                        type="button"
+                        aria-current={selected ? "true" : undefined}
+                        onClick={() => selectCategory(category.label)}
+                        className={cn(
+                          "group relative flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-left transition-colors duration-200",
+                          selected
+                            ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80 dark:bg-slate-900 dark:text-white dark:ring-slate-700"
+                            : "text-slate-600 hover:bg-white/70 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-900/60 dark:hover:text-white",
+                        )}
+                      >
+                        {selected ? (
+                          <motion.span
+                            layoutId="faq-active-bar"
+                            className="absolute inset-y-2 left-0 w-1 rounded-full bg-cyan-500"
+                            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                          />
+                        ) : null}
+                        <span
+                          className={cn(
+                            "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors",
+                            selected
+                              ? "bg-cyan-500/15 text-cyan-700 dark:bg-cyan-400/15 dark:text-cyan-300"
+                              : "bg-slate-100 text-slate-500 group-hover:bg-cyan-500/10 group-hover:text-cyan-700 dark:bg-slate-800 dark:text-slate-400 dark:group-hover:text-cyan-300",
+                          )}
+                        >
+                          <Icon className="h-5 w-5" aria-hidden />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                            {String(index + 1).padStart(2, "0")} · {count} Qs
+                          </span>
+                          <span className="mt-0.5 block text-base font-semibold leading-snug">{category.label}</span>
+                        </span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+
+              <div className="mt-6 hidden rounded-2xl border border-slate-200/80 bg-white/70 p-5 dark:border-slate-700/80 dark:bg-slate-950/50 lg:block">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">
+                  <MessageCircle className="h-5 w-5" aria-hidden />
+                </div>
+                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Still have a question?</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  Send a short note and we will follow up when we can.
+                </p>
+                <a
+                  href={contactMailto}
+                  className="mt-4 inline-flex text-sm font-semibold text-cyan-700 underline-offset-4 hover:underline dark:text-cyan-300"
+                >
+                  Contact us
+                </a>
+              </div>
+            </nav>
+
+            <div className="relative min-h-[22rem] overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-[0_20px_50px_-28px_rgba(15,23,42,0.35)] backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-950/70 dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.65)]">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full bg-gradient-to-br from-cyan-400/25 to-transparent blur-2xl dark:from-cyan-300/20"
+              />
+
+              <div className="relative border-b border-slate-200/80 px-5 py-5 dark:border-slate-700/80 sm:px-6">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">
+                    <ActiveIcon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                      Category
+                    </p>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">{selectedCategory}</h3>
+                  </div>
+                </div>
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedCategory}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="relative"
+                >
+                  {filteredFaqs.map((faq) => (
+                    <FAQItem
+                      key={faq.question}
+                      question={faq.question}
+                      answer={faq.answer}
+                      open={openQuestion === faq.question}
+                      onToggle={() =>
+                        setOpenQuestion((current) => (current === faq.question ? null : faq.question))
+                      }
+                    />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

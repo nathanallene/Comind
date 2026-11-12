@@ -34,7 +34,7 @@ export function Hero({ id }: AnimatedProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          Our mission is to connect individuals with AI experts and software engineers, primarily based in Taiwan. Through technical mentorship, hands-on learning, and cross-border collaboration, we help participants build practical skills, deepen their understanding of AI technologies, and explore new opportunities in the tech industry.
+          Our mission is to connect individuals with AI experts and software engineers. Through technical mentorship, hands-on learning, and cross-border collaboration, we help participants build practical skills, deepen their understanding of AI technologies, and explore new opportunities in the tech industry.
         </motion.p>
         <motion.p
           className="mx-auto mb-8 max-w-2xl text-lg text-foreground/70"
