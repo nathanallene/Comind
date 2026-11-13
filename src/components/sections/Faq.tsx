@@ -20,7 +20,7 @@ import type { LucideIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 
 const categories = [
-  { id: "about", label: "About DevBridge", icon: Building2 },
+  { id: "about", label: "About BeAILead", icon: Building2 },
   { id: "joining", label: "Joining the Network", icon: Users },
   { id: "learning", label: "Learning & Mentorship", icon: GraduationCap },
   { id: "services", label: "Services & Collaboration", icon: Briefcase },
@@ -31,20 +31,20 @@ type CategoryLabel = (typeof categories)[number]["label"]
 
 const faqs: FAQItemProps[] = [
   {
-    category: "About DevBridge",
-    question: "What does DevBridge do?",
+    category: "About BeAILead",
+    question: "What does BeAILead do?",
     answer:
-      "DevBridge connects individuals with AI experts and software engineers. Through technical mentorship, hands-on learning, and collaboration, we help people build practical skills and explore opportunities in AI and technology.",
+      "BeAILead connects individuals with AI experts and software engineers. Through technical mentorship, hands-on learning, and collaboration, we help people build practical skills and explore opportunities in AI and technology.",
   },
   {
-    category: "About DevBridge",
+    category: "About BeAILead",
     question: "What is your mission?",
     answer:
       "Our mission is to bring people, knowledge, and technology together—so participants can deepen their understanding of AI, grow professionally, and form meaningful connections with experienced practitioners.",
   },
   {
-    category: "About DevBridge",
-    question: "What makes DevBridge different?",
+    category: "About BeAILead",
+    question: "What makes BeAILead different?",
     answer:
       "We focus on people first: mentorship and practical learning alongside real technology work. Participants can learn from experienced engineers, build skills over time, and explore collaboration when the fit is right.",
   },

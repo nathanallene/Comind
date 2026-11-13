@@ -26,7 +26,7 @@ export function Footer() {
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             &copy; {new Date().getFullYear()}{" "}
-            <span className="font-medium text-gray-800 dark:text-gray-200">DevBridge</span>
+            <span className="font-medium text-gray-800 dark:text-gray-200">BeAILead</span>
           </p>
         </div>
       </motion.div>

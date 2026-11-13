@@ -1,5 +1,5 @@
 export const site = {
-  name: "DevBridge",
+  name: "BeAILead",
   tagline: "Connect with AI Experts. Grow Through Mentorship.",
   description:
     "AI education, technical mentorship, software development, intelligent automation, and technology collaboration across the United States and Taiwan.",
